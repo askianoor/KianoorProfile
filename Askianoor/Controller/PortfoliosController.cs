@@ -12,7 +12,7 @@ namespace Askianoor.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Administrator")]
+    
     public class PortfoliosController : ControllerBase
     {
         private readonly ApplicationContext _context;
@@ -45,6 +45,7 @@ namespace Askianoor.Controller
 
         // PUT: api/Portfolios/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> PutPortfolio(Guid id, Portfolio portfolio)
         {
             if (id != portfolio.Id)
@@ -75,6 +76,7 @@ namespace Askianoor.Controller
 
         // POST: api/Portfolios
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<Portfolio>> PostPortfolio(Portfolio portfolio)
         {
             _context.Portfolios.Add(portfolio);
@@ -83,8 +85,10 @@ namespace Askianoor.Controller
             return CreatedAtAction("GetPortfolio", new { id = portfolio.Id }, portfolio);
         }
 
+
         // DELETE: api/Portfolios/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<Portfolio>> DeletePortfolio(Guid id)
         {
             var portfolio = await _context.Portfolios.FindAsync(id);
