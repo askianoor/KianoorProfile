@@ -14,11 +14,19 @@ namespace Askianoor.Models
 
         }
 
-        #region User & Dashboard Settings
+        #region User & Dashboard Settings & Main Models
 
         public DbSet<DashboardSetting> DashboardSettings { get; set; }
 
         public DbSet<AppUser> AppUsers { get; set; }
+
+        public DbSet<Navbar> Navbars { get; set; }
+
+        public DbSet<SocialNetwork> SocialNetworks { get; set; }
+
+        public DbSet<Education> Educations { get; set; }
+
+        public DbSet<Experience> Experiences { get; set; }
 
         #endregion
 
@@ -28,10 +36,10 @@ namespace Askianoor.Models
 
         public DbSet<PortfolioCategory> PortfolioCategories { get; set; }
 
-        public DbSet<Like> Likes { get; set; }
+        public DbSet<LikePortfolio> LikePortfolios { get; set; }
+
 
         #endregion
-
 
     }
 }

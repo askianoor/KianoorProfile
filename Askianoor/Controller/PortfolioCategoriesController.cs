@@ -12,7 +12,6 @@ namespace Askianoor.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Administrator")]
     public class PortfolioCategoriesController : ControllerBase
     {
         private readonly ApplicationContext _context;
@@ -26,7 +25,7 @@ namespace Askianoor.Controller
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PortfolioCategory>>> GetPortfolioCategories()
         {
-            return await _context.PortfolioCategories.ToListAsync();
+            return await _context.PortfolioCategories.ToListAsync().ConfigureAwait(true);
         }
 
         // GET: api/PortfolioCategories/5
@@ -44,10 +43,14 @@ namespace Askianoor.Controller
         }
 
         // PUT: api/PortfolioCategories/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> PutPortfolioCategory(Guid id, PortfolioCategory portfolioCategory)
         {
-            if (id != portfolioCategory.PortfolioCategoryId)
+
+            if (portfolioCategory == null || id != portfolioCategory.PortfolioCategoryId)
             {
                 return BadRequest();
             }
@@ -56,7 +59,7 @@ namespace Askianoor.Controller
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(true);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -74,17 +77,26 @@ namespace Askianoor.Controller
         }
 
         // POST: api/PortfolioCategories
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<PortfolioCategory>> PostPortfolioCategory(PortfolioCategory portfolioCategory)
         {
+            if (portfolioCategory == null)
+            {
+                return BadRequest();
+            }
+
             _context.PortfolioCategories.Add(portfolioCategory);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(true);
 
             return CreatedAtAction("GetPortfolioCategory", new { id = portfolioCategory.PortfolioCategoryId }, portfolioCategory);
         }
 
         // DELETE: api/PortfolioCategories/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<PortfolioCategory>> DeletePortfolioCategory(Guid id)
         {
             var portfolioCategory = await _context.PortfolioCategories.FindAsync(id);
@@ -94,7 +106,7 @@ namespace Askianoor.Controller
             }
 
             _context.PortfolioCategories.Remove(portfolioCategory);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(true);
 
             return portfolioCategory;
         }

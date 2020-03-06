@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace Askianoor.Models
 {
-    public class PortfolioCategory
+    public class Navbar
     {
         [Key]
-        public Guid PortfolioCategoryId { get; set; }
+        public Guid MenuId { get; set; }
 
-        public string CategoryName { get; set; }
+        public int MenuOrder { get; set; }
+        public string MenuName { get; set; }
+        public string MenuPath { get; set; }
     }
 }

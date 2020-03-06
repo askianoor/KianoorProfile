@@ -26,7 +26,7 @@ namespace Askianoor.Controller
         public async Task<Object> GetUserProfile()
         {
             string userId = User.Claims.First(c => c.Type == "UserID").Value;
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId).ConfigureAwait(true);
             return new
             {
                 user.FirstName,

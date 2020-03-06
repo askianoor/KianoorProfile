@@ -7,8 +7,10 @@ namespace Askianoor.Models
 {
     public class ApplicationSettings
     {
-        public string JWT_Secret { get; set; }
-        public string Client_URL { get; set; }
+        public string JWTSecret { get; set; }
+
+        private string ClientURL { get; set; }
+
         public string AdminRoleName { get; set; }
     }
 }

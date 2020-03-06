@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Askianoor.Models
 {
-    public class Like
+    public class LikePortfolio
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

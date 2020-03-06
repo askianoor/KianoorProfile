@@ -20,5 +20,16 @@ namespace Askianoor.Models
         public string OwnerName { get; set; }
 
         public string OwnerPictureSrc { get; set; }
+
+        public string AboutMeDescription { get; set; }
+
+        public string AboutMeImage { get; set; }
+
+        public string HomePageImage { get; set; }
+
+        public string HomePageText { get; set; }
+
+        public string FooterText { get; set; }
+
     }
 }

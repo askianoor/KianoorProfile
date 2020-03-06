@@ -54,7 +54,7 @@ namespace Askianoor
             services.AddCors();
 
             //Jwt Authentication
-            var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSettings:JWT_Secret"].ToString());
+            var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSettings:JWT_Secret"]);
 
             services.AddAuthentication(x =>
             {
@@ -90,14 +90,14 @@ namespace Askianoor
 
             app.Use(async (ctx, next) =>
             {
-                await next();
+                await next().ConfigureAwait(true);
                 if (ctx.Response.StatusCode == 204)
                 {
                     ctx.Response.ContentLength = 0;
                 }
             });
 
-            app.UseCors(builder => builder.WithOrigins(Configuration["ApplicationSettings:Client_URL"].ToString()).AllowAnyHeader().AllowAnyMethod());
+            app.UseCors(builder => builder.WithOrigins(Configuration["ApplicationSettings:Client_URL"]).AllowAnyHeader().AllowAnyMethod());
 
             app.UseHttpsRedirection();
         }

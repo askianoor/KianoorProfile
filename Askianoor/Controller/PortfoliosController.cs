@@ -12,7 +12,6 @@ namespace Askianoor.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
-    
     public class PortfoliosController : ControllerBase
     {
         private readonly ApplicationContext _context;
@@ -26,7 +25,7 @@ namespace Askianoor.Controller
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Portfolio>>> GetPortfolios()
         {
-            return await _context.Portfolios.ToListAsync();
+            return await _context.Portfolios.ToListAsync().ConfigureAwait(true);
         }
 
         // GET: api/Portfolios/5
@@ -44,11 +43,13 @@ namespace Askianoor.Controller
         }
 
         // PUT: api/Portfolios/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> PutPortfolio(Guid id, Portfolio portfolio)
         {
-            if (id != portfolio.Id)
+            if (portfolio == null || id != portfolio.Id)
             {
                 return BadRequest();
             }
@@ -57,7 +58,7 @@ namespace Askianoor.Controller
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(true);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -75,16 +76,22 @@ namespace Askianoor.Controller
         }
 
         // POST: api/Portfolios
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
         [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<Portfolio>> PostPortfolio(Portfolio portfolio)
         {
+            if (portfolio == null)
+            {
+                return BadRequest();
+            }
+
             _context.Portfolios.Add(portfolio);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(true);
 
             return CreatedAtAction("GetPortfolio", new { id = portfolio.Id }, portfolio);
         }
-
 
         // DELETE: api/Portfolios/5
         [HttpDelete("{id}")]
@@ -98,7 +105,7 @@ namespace Askianoor.Controller
             }
 
             _context.Portfolios.Remove(portfolio);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(true);
 
             return portfolio;
         }

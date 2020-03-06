@@ -25,10 +25,13 @@ namespace Askianoor.Controller
 
         public AppUserController(UserManager<AppUser> userManager,  IOptions<ApplicationSettings> appSettings) //, SignInManager<AppUser> signInManager , ApplicationContext applicationContext)
         {
+            if(appSettings != null) {
+
             _userManager = userManager;
             //_singInManager = signInManager;
             _appSettings = appSettings.Value;
-            //_applicationContext = applicationContext;
+                //_applicationContext = applicationContext;
+            }
         }
 
         [HttpPost]
@@ -36,6 +39,11 @@ namespace Askianoor.Controller
         //POST : /api/AppUser/Register
         public async Task<Object> PostAppUser(ApplicationUserModel model)
         {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+
             var applicationUser = new AppUser()
             {
                 UserName = model.UserName,
@@ -47,18 +55,18 @@ namespace Askianoor.Controller
 
             try
             {
-                var result = await _userManager.CreateAsync(applicationUser, model.Password);
+                var result = await _userManager.CreateAsync(applicationUser, model.Password).ConfigureAwait(true);
 
                 if (result.Succeeded)
                 {
-                    var roleResult = await _userManager.AddToRoleAsync(applicationUser, "Users");
+                    var roleResult = await _userManager.AddToRoleAsync(applicationUser, "Users").ConfigureAwait(true);
                 }
 
                 return Ok(result);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -67,16 +75,20 @@ namespace Askianoor.Controller
         //POST : /api/AppUser/Login
         public async Task<IActionResult> Login(LoginModel model)
         {
-            var user = await _userManager.FindByNameAsync(model.UserName);
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+            if(model == null)
+                return BadRequest(new { message = "Username or password is incorrect." });
+
+            var user = await _userManager.FindByNameAsync(model.UserName).ConfigureAwait(true);
+            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password).ConfigureAwait(true))
             {
                 try
                 {
+
                     var tokenDescriptor = new SecurityTokenDescriptor
                     {
-                        Subject = new ClaimsIdentity(new Claim[] { new Claim("UserID", user.Id.ToString()) }),
+                        Subject = new ClaimsIdentity(new Claim[] { new Claim("UserID", user.Id) }),
                         Expires = DateTime.UtcNow.AddDays(1),
-                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.JWT_Secret)), SecurityAlgorithms.HmacSha256Signature)
+                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.JWTSecret)), SecurityAlgorithms.HmacSha256Signature)
                     };
                     var tokenHandler = new JwtSecurityTokenHandler();
                     var securityToken = tokenHandler.CreateToken(tokenDescriptor);
@@ -86,8 +98,10 @@ namespace Askianoor.Controller
                 }
                 catch (Exception)
                 {
-                    return BadRequest(new { message = "Funtion System Error." }); ;
+                    throw;
+                    //return BadRequest(new { message = "Funtion System Error." }); ;
                 }
+
             }
             else
             {

@@ -26,7 +26,7 @@ namespace Askianoor.Controller
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DashboardSetting>>> GetDashboardSettings()
         {
-            return await _context.DashboardSettings.ToListAsync();
+            return await _context.DashboardSettings.ToListAsync().ConfigureAwait(true);
         }
 
         // GET: api/DashboardSettings/5
@@ -47,7 +47,7 @@ namespace Askianoor.Controller
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDashboardSetting(int id, DashboardSetting dashboardSetting)
         {
-            if (id != dashboardSetting.Id)
+            if (dashboardSetting == null || id != dashboardSetting.Id)
             {
                 return BadRequest();
             }
@@ -56,7 +56,7 @@ namespace Askianoor.Controller
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(true);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -77,8 +77,13 @@ namespace Askianoor.Controller
         [HttpPost]
         public async Task<ActionResult<DashboardSetting>> PostDashboardSetting(DashboardSetting dashboardSetting)
         {
+            if (dashboardSetting == null)
+            {
+                return BadRequest();
+            }
+
             _context.DashboardSettings.Add(dashboardSetting);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(true);
 
             return CreatedAtAction("GetDashboardSetting", new { id = dashboardSetting.Id }, dashboardSetting);
         }
@@ -94,7 +99,7 @@ namespace Askianoor.Controller
             }
 
             _context.DashboardSettings.Remove(dashboardSetting);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(true);
 
             return dashboardSetting;
         }

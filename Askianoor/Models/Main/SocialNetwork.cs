@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace Askianoor.Models
 {
-    public class PortfolioCategory
+    public class SocialNetwork
     {
         [Key]
-        public Guid PortfolioCategoryId { get; set; }
+        public Guid SocialId { get; set; }
 
-        public string CategoryName { get; set; }
+        public string Name { get; set; }
+        public string Icon { get; set; }
+        public string Link { get; set; }
     }
 }
