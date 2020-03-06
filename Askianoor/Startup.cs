@@ -38,7 +38,7 @@ namespace Askianoor
             services.AddMvc();
 
             services.AddDbContext<ApplicationContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
 
             services.AddDefaultIdentity<AppUser>().AddRoles<IdentityRole>().AddEntityFrameworkStores<ApplicationContext>();
 
@@ -54,7 +54,7 @@ namespace Askianoor
             services.AddCors();
 
             //Jwt Authentication
-            var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSettings:JWT_Secret"]);
+            var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSettings:JWTSecret"]);
 
             services.AddAuthentication(x =>
             {
@@ -97,7 +97,7 @@ namespace Askianoor
                 }
             });
 
-            app.UseCors(builder => builder.WithOrigins(Configuration["ApplicationSettings:Client_URL"]).AllowAnyHeader().AllowAnyMethod());
+            app.UseCors(builder => builder.WithOrigins(Configuration["ApplicationSettings:ClientURL"]).AllowAnyHeader().AllowAnyMethod());
 
             app.UseHttpsRedirection();
         }
