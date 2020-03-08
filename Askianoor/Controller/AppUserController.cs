@@ -39,7 +39,7 @@ namespace Askianoor.Controller
         //POST : /api/AppUser/Register
         public async Task<Object> PostAppUser(ApplicationUserModel model)
         {
-            if (model == null)
+            if (model == null || string.IsNullOrEmpty(model.Passwords))
             {
                 return BadRequest();
             }
@@ -50,12 +50,13 @@ namespace Askianoor.Controller
                 Email = model.Email,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                NickName = model.NickName
+                NickName = model.NickName,
+                BirthdayDate = model.BirthdayDate
             };
 
             try
             {
-                var result = await _userManager.CreateAsync(applicationUser, model.Password).ConfigureAwait(true);
+                var result = await _userManager.CreateAsync(applicationUser, model.Passwords).ConfigureAwait(true);
 
                 if (result.Succeeded)
                 {

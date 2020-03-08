@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Askianoor.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -100,6 +102,27 @@ namespace Askianoor
             app.UseCors(builder => builder.WithOrigins(Configuration["ApplicationSettings:ClientURL"]).AllowAnyHeader().AllowAnyMethod());
 
             app.UseHttpsRedirection();
+
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+
+            //add endpoint dispatch middleware
+            app.UseEndpoints(endpoints =>
+            {
+                //route map configuration
+                endpoints.MapControllers();
+
+                //route map I added to show Authorization setup
+                //endpoints.MapGet("/secret", context =>
+                //{
+                //    return context.Response.WriteAsync("secret");
+                //}).RequireAuthorization(new AuthorizeAttribute() { Roles = "Administrator" });
+            });
+
+
+            //app.UseMvc();
         }
     }
 }

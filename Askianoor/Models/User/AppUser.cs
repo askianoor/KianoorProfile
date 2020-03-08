@@ -17,5 +17,8 @@ namespace Askianoor.Models
 
         [Column(TypeName = "nvarchar(150)")]
         public string NickName { get; set; }
+
+        [Column(TypeName = "date")]
+        public DateTime BirthdayDate { get; set; }
     }
 }
