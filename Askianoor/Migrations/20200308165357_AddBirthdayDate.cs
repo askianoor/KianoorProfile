@@ -7,18 +7,24 @@ namespace Askianoor.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<DateTime>(
+            if (migrationBuilder != null)
+            {
+                migrationBuilder.AddColumn<DateTime>(
                 name: "BirthdayDate",
                 table: "AspNetUsers",
                 type: "date",
                 nullable: true);
+            }
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
+            if (migrationBuilder != null)
+            {
+                migrationBuilder.DropColumn(
                 name: "BirthdayDate",
                 table: "AspNetUsers");
+            }
         }
     }
 }

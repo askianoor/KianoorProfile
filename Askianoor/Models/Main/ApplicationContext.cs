@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Askianoor.Models.Main;
 
 namespace Askianoor.Models
 {
@@ -37,6 +38,8 @@ namespace Askianoor.Models
         public DbSet<PortfolioCategory> PortfolioCategories { get; set; }
 
         public DbSet<LikePortfolio> LikePortfolios { get; set; }
+
+        public DbSet<Askianoor.Models.Main.Skill> Skill { get; set; }
 
 
         #endregion
