@@ -25,14 +25,14 @@ namespace Askianoor.Controller
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Skill>>> GetSkill()
         {
-            return await _context.Skill.ToListAsync().ConfigureAwait(true);
+            return await _context.Skills.ToListAsync().ConfigureAwait(true);
         }
 
         // GET: api/Skills/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Skill>> GetSkill(Guid id)
         {
-            var skill = await _context.Skill.FindAsync(id);
+            var skill = await _context.Skills.FindAsync(id);
 
             if (skill == null)
             {
@@ -85,7 +85,7 @@ namespace Askianoor.Controller
                 return NotFound();
             }
 
-            _context.Skill.Add(skill);
+            _context.Skills.Add(skill);
             await _context.SaveChangesAsync().ConfigureAwait(true);
 
             return CreatedAtAction("GetSkill", new { id = skill.SkillId }, skill);
@@ -95,13 +95,13 @@ namespace Askianoor.Controller
         [HttpDelete("{id}")]
         public async Task<ActionResult<Skill>> DeleteSkill(Guid id)
         {
-            var skill = await _context.Skill.FindAsync(id);
+            var skill = await _context.Skills.FindAsync(id);
             if (skill == null)
             {
                 return NotFound();
             }
 
-            _context.Skill.Remove(skill);
+            _context.Skills.Remove(skill);
             await _context.SaveChangesAsync().ConfigureAwait(true);
 
             return skill;
@@ -109,7 +109,7 @@ namespace Askianoor.Controller
 
         private bool SkillExists(Guid id)
         {
-            return _context.Skill.Any(e => e.SkillId == id);
+            return _context.Skills.Any(e => e.SkillId == id);
         }
     }
 }

@@ -93,9 +93,9 @@ namespace Askianoor.Controller
                     };
                     var tokenHandler = new JwtSecurityTokenHandler();
                     var securityToken = tokenHandler.CreateToken(tokenDescriptor);
-                    var access_token = tokenHandler.WriteToken(securityToken);
+                    var accessToken = tokenHandler.WriteToken(securityToken);
 
-                    return Ok(new { access_token });
+                    return Ok(new { accessToken });
                 }
                 catch (Exception)
                 {
