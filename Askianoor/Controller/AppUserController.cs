@@ -83,14 +83,27 @@ namespace Askianoor.Controller
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password).ConfigureAwait(true))
             {
                 try
-                {
+                {                
+                    SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor();
+                    bool isAdmin = await _userManager.IsInRoleAsync(user, "Administrator").ConfigureAwait(true);
 
-                    var tokenDescriptor = new SecurityTokenDescriptor
+                    if (isAdmin)
                     {
-                        Subject = new ClaimsIdentity(new Claim[] { new Claim("UserID", user.Id) }),
-                        Expires = DateTime.UtcNow.AddDays(1),
-                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.JWTSecret)), SecurityAlgorithms.HmacSha256Signature)
-                    };
+                        tokenDescriptor = new SecurityTokenDescriptor
+                        {
+                            Subject = new ClaimsIdentity(new Claim[] { new Claim("UserID", user.Id), new Claim(ClaimTypes.Role, _appSettings.AdminRoleName) }),
+                            Expires = DateTime.UtcNow.AddDays(1),
+                            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.JWTSecret)), SecurityAlgorithms.HmacSha256Signature)
+                        };
+                    }
+                    else {
+                        tokenDescriptor = new SecurityTokenDescriptor
+                        {
+                            Subject = new ClaimsIdentity(new Claim[] { new Claim("UserID", user.Id), new Claim(ClaimTypes.Role, "Users")}),
+                            Expires = DateTime.UtcNow.AddDays(1),
+                            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.JWTSecret)), SecurityAlgorithms.HmacSha256Signature)
+                        };
+                    }
                     var tokenHandler = new JwtSecurityTokenHandler();
                     var securityToken = tokenHandler.CreateToken(tokenDescriptor);
                     var accessToken = tokenHandler.WriteToken(securityToken);

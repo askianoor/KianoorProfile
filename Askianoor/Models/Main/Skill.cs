@@ -12,7 +12,7 @@ namespace Askianoor.Models.Main
         public Guid SkillId { get; set; }
 
         public string Name { get; set; }
-        public string Level { get; set; }
+        public int Level { get; set; }
         public string cssClass { get; set; }
         public int Group { get; set; }
     }

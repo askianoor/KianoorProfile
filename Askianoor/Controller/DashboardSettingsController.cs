@@ -12,7 +12,7 @@ namespace Askianoor.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Administrator")]
+    //[Authorize(Roles = "Administrator")]
     public class DashboardSettingsController : ControllerBase
     {
         private readonly ApplicationContext _context;
@@ -45,6 +45,7 @@ namespace Askianoor.Controller
 
         // PUT: api/DashboardSettings/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> PutDashboardSetting(int id, DashboardSetting dashboardSetting)
         {
             if (dashboardSetting == null || id != dashboardSetting.Id)
@@ -75,6 +76,7 @@ namespace Askianoor.Controller
 
         // POST: api/DashboardSettings
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<DashboardSetting>> PostDashboardSetting(DashboardSetting dashboardSetting)
         {
             if (dashboardSetting == null)
@@ -90,6 +92,7 @@ namespace Askianoor.Controller
 
         // DELETE: api/DashboardSettings/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<DashboardSetting>> DeleteDashboardSetting(int id)
         {
             var dashboardSetting = await _context.DashboardSettings.FindAsync(id);

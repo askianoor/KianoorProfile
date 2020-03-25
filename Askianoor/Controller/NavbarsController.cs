@@ -24,7 +24,7 @@ namespace Askianoor.Controller
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Navbar>>> GetNavbars()
         {
-            return await _context.Navbars.ToListAsync();
+            return await _context.Navbars.ToListAsync().ConfigureAwait(true);
         }
 
         // GET: api/Navbars/5
@@ -47,7 +47,7 @@ namespace Askianoor.Controller
         [HttpPut("{id}")]
         public async Task<IActionResult> PutNavbar(Guid id, Navbar navbar)
         {
-            if (id != navbar.MenuId)
+            if (navbar == null || id != navbar.MenuId)
             {
                 return BadRequest();
             }
@@ -56,7 +56,7 @@ namespace Askianoor.Controller
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(true);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -79,8 +79,11 @@ namespace Askianoor.Controller
         [HttpPost]
         public async Task<ActionResult<Navbar>> PostNavbar(Navbar navbar)
         {
+            if (navbar == null)
+                return BadRequest();
+
             _context.Navbars.Add(navbar);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(true);
 
             return CreatedAtAction("GetNavbar", new { id = navbar.MenuId }, navbar);
         }
@@ -96,7 +99,7 @@ namespace Askianoor.Controller
             }
 
             _context.Navbars.Remove(navbar);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(true);
 
             return navbar;
         }

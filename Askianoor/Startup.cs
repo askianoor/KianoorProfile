@@ -104,7 +104,7 @@ namespace Askianoor
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
