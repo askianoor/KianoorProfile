@@ -19,6 +19,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace Askianoor
 {
@@ -75,6 +76,17 @@ namespace Askianoor
                     ClockSkew = TimeSpan.Zero
                 };
             });
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Askianoor API",
+                    Description = "My Personal Website ASP.NET Core 3 Web API",
+                    Contact = new OpenApiContact() { Name = "Ali Kianoor", Email = "askianoor@gmail.com", Url = new Uri("www.askianoor.com") }
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -102,6 +114,11 @@ namespace Askianoor
             app.UseCors(builder => builder.WithOrigins(Configuration["ApplicationSettings:ClientURL"]).AllowAnyHeader().AllowAnyMethod());
 
             app.UseHttpsRedirection();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint(url: "/swagger/v1/swagger.json", name: "Askianoor API v1");
+            });
 
             app.UseRouting();
             app.UseAuthentication();
