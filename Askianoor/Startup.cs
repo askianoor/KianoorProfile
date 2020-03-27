@@ -83,10 +83,12 @@ namespace Askianoor
                 {
                     Version = "v1",
                     Title = "Askianoor API",
-                    Description = "My Personal Website ASP.NET Core 3 Web API",
-                    Contact = new OpenApiContact() { Name = "Ali Kianoor", Email = "askianoor@gmail.com", Url = new Uri("www.askianoor.com") }
+                    Description = "My Personal Website ASP.NET Core 3 Web API"
                 });
             });
+
+            //  , Contact = new OpenApiContact() { Name = "Ali Kianoor", Email = "askianoor@gmail.com", Url = new Uri("www.askianoor.com") }
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
