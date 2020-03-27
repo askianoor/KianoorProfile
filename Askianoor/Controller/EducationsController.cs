@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Askianoor.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Askianoor.Controller
 {
@@ -45,6 +46,7 @@ namespace Askianoor.Controller
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> PutEducation(Guid id, Education education)
         {
             if (education == null || id != education.EducationId)
@@ -77,6 +79,7 @@ namespace Askianoor.Controller
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<Education>> PostEducation(Education education)
         {
             if (education == null)
@@ -92,6 +95,7 @@ namespace Askianoor.Controller
 
         // DELETE: api/Educations/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<Education>> DeleteEducation(Guid id)
         {
             var education = await _context.Educations.FindAsync(id);

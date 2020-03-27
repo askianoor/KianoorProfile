@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Askianoor.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Askianoor.Controller
 {
@@ -45,6 +46,7 @@ namespace Askianoor.Controller
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> PutExperience(Guid id, Experience experience)
         {
             if (experience == null || id != experience.ExperienceId)
@@ -77,6 +79,7 @@ namespace Askianoor.Controller
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<Experience>> PostExperience(Experience experience)
         {
             if (experience == null)
@@ -92,6 +95,7 @@ namespace Askianoor.Controller
 
         // DELETE: api/Experiences/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<Experience>> DeleteExperience(Guid id)
         {
             var experience = await _context.Experiences.FindAsync(id);

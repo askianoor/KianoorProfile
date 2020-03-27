@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Askianoor.Models;
 using Askianoor.Models.Main;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Askianoor.Controller
 {
@@ -46,6 +47,7 @@ namespace Askianoor.Controller
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> PutSkill(Guid id, Skill skill)
         {
             if (skill == null || id != skill.SkillId)
@@ -78,6 +80,7 @@ namespace Askianoor.Controller
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<Skill>> PostSkill(Skill skill)
         {
             if (skill == null)
@@ -93,6 +96,7 @@ namespace Askianoor.Controller
 
         // DELETE: api/Skills/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<Skill>> DeleteSkill(Guid id)
         {
             var skill = await _context.Skills.FindAsync(id);

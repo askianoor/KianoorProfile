@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Askianoor.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Askianoor.Controller
 {
@@ -45,6 +46,7 @@ namespace Askianoor.Controller
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> PutSocialNetwork(Guid id, SocialNetwork socialNetwork)
         {
             if (socialNetwork == null || id != socialNetwork.SocialId)
@@ -77,6 +79,7 @@ namespace Askianoor.Controller
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<SocialNetwork>> PostSocialNetwork(SocialNetwork socialNetwork)
         {
             if (socialNetwork == null)
@@ -92,6 +95,7 @@ namespace Askianoor.Controller
 
         // DELETE: api/SocialNetworks/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<SocialNetwork>> DeleteSocialNetwork(Guid id)
         {
             var socialNetwork = await _context.SocialNetworks.FindAsync(id);
