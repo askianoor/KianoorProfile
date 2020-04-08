@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Askianoor.Models.Main;
+using Askianoor.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Net.Mail;
 using Askianoor.Models;
 using Microsoft.Extensions.Options;
+using System.ComponentModel;
+using System.Globalization;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace Askianoor.Controller
 {
@@ -27,36 +30,55 @@ namespace Askianoor.Controller
         }
 
         [HttpPost]
-        public bool PostContact(Contact contact)
+        public ActionResult<Contact> PostContact(Contact contact)
         {
             if (contact == null)
             {
-                return false;
+                return BadRequest();
             }
 
             MailAddress to = new MailAddress(_appSettings.ContactEmail);
             MailAddress from = new MailAddress(contact.Email);
 
-            MailMessage message = new MailMessage(from, to);
-            message.Subject = contact.Subject;
-            message.Body = contact.Message;
-
-            SmtpClient client = new SmtpClient("smtp.server.address", 2525)
-            {
-                Credentials = new NetworkCredential("smtp_username", "smtp_password"),
-                EnableSsl = true
-            };
-
             try
             {
+                if (string.IsNullOrEmpty(to.Address) || string.IsNullOrEmpty(from.Address))
+                    return BadRequest();
+
+                MailMessage message = new MailMessage(from, to);
+                message.Subject = contact.Subject;
+                message.Body = contact.Message;
+
+                int port = Convert.ToInt16(_appSettings.SmtpPort, new CultureInfo("en-us"));
+
+                SmtpClient client = new SmtpClient(_appSettings.SmtpServer, port)
+                {
+                    Credentials = new NetworkCredential(_appSettings.SmtpUser, _appSettings.SmtpPassword),
+                    EnableSsl = true
+                };
+
+
                 client.Send(message);
+                message.Dispose();
+                client.Dispose();
             }
             catch (SmtpException ex)
             {
                 Console.WriteLine(ex.ToString());
+                return BadRequest();
+            }
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return BadRequest();
+            }
+            catch (FormatException ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return BadRequest();
             }
 
-            return CreatedAtAction("GetSkill", new { id = skill.SkillId }, skill);
+            return contact;
         }
     }
 }
