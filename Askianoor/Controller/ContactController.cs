@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Net.Mail;
-using Askianoor.Models;
 using Microsoft.Extensions.Options;
 using System.ComponentModel;
 using System.Globalization;

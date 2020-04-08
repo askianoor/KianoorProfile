@@ -41,7 +41,7 @@ namespace Askianoor.Controller
                 {
 
                     string secretKey = _appSettings.ReCaptchaSecretKey;
-                    var gReply = client.DownloadString(string.Format("https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}", secretKey, token));
+                    var gReply = client.DownloadString(string.Format(new CultureInfo("en-US"), "https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}", secretKey, token));
 
                     var response = JsonConvert.DeserializeObject<ReCaptcha>(gReply);
                     if (response.Success.ToLower(new CultureInfo ("en-US")) == "true")
@@ -59,6 +59,7 @@ namespace Askianoor.Controller
             {
                 Console.WriteLine(ex.ToString());
                 return BadRequest();
+                throw;
             }
         }
 
