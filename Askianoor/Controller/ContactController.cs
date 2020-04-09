@@ -56,7 +56,7 @@ namespace Askianoor.Controller
                 //message.ReplyTo.Add(new MailboxAddress("reply_name", "reply_email@example.com"));
 
                 message.Subject = contact.Subject;
-                bodyBuilder.HtmlBody = contact.Message;
+                bodyBuilder.HtmlBody = "Email From : " + contact.Email + " and Message is : " + contact.Message;
                 message.Body = bodyBuilder.ToMessageBody();
 
                 using (var client = new SmtpClient())
