@@ -6,11 +6,14 @@ using Askianoor.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using System.Net.Mail;
+//using System.Net.Mail;
 using Microsoft.Extensions.Options;
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices.WindowsRuntime;
+using MailKit.Security;
+using MimeKit;
+using MailKit.Net.Smtp;
 
 namespace Askianoor.Controller
 {
@@ -36,46 +39,54 @@ namespace Askianoor.Controller
                 return BadRequest();
             }
 
-            MailAddress to = new MailAddress(_appSettings.ContactEmail);
-            MailAddress from = new MailAddress(contact.Email);
-
             try
             {
-                if (string.IsNullOrEmpty(to.Address) || string.IsNullOrEmpty(from.Address))
+                if (string.IsNullOrEmpty(_appSettings.ContactEmail) || string.IsNullOrEmpty(contact.Email))
                     return BadRequest();
 
-                MailMessage message = new MailMessage(from, to);
+                var message = new MimeMessage();
+                var bodyBuilder = new BodyBuilder();
+
+                // from
+                message.From.Add(new MailboxAddress("Contact Form", contact.Email));
+                // to
+                message.To.Add(new MailboxAddress("Admin", _appSettings.ContactEmail));
+
+                //// reply to
+                //message.ReplyTo.Add(new MailboxAddress("reply_name", "reply_email@example.com"));
+
                 message.Subject = contact.Subject;
-                message.Body = contact.Message;
+                bodyBuilder.HtmlBody = contact.Message;
+                message.Body = bodyBuilder.ToMessageBody();
 
-                int port = Convert.ToInt16(_appSettings.SmtpPort, new CultureInfo("en-us"));
-
-                SmtpClient client = new SmtpClient(_appSettings.SmtpServer, port)
+                using (var client = new SmtpClient())
                 {
-                    Credentials = new NetworkCredential(_appSettings.SmtpUser, _appSettings.SmtpPassword),
-                    EnableSsl = true
-                };
+                    int port = Convert.ToInt16(_appSettings.SmtpPort, new CultureInfo("en-us"));
 
-
-                client.Send(message);
-                message.Dispose();
-                client.Dispose();
-            }
-            catch (SmtpException ex)
-            {
-                Console.WriteLine(ex.ToString());
-                return BadRequest();
+                    //client.ServerCertificateValidationCallback = (s, c, h, e) => true;
+                    client.Connect(_appSettings.SmtpServer, port, SecureSocketOptions.SslOnConnect);
+                    client.Authenticate(_appSettings.SmtpUser, _appSettings.SmtpPassword);
+                    client.Send(message);
+                    client.Disconnect(true);
+                }
             }
             catch (ArgumentNullException ex)
             {
                 Console.WriteLine(ex.ToString());
-                return BadRequest();
+                return BadRequest(new { message = "Please Complete all the requirements." });
             }
             catch (FormatException ex)
             {
                 Console.WriteLine(ex.ToString());
-                return BadRequest();
+                return BadRequest(new { message = "Email Format is Wrong!" });
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return BadRequest(new { message = ex.Message });
+                throw;
+            }
+
 
             return contact;
         }
