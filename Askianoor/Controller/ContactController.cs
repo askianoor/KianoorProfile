@@ -48,7 +48,7 @@ namespace Askianoor.Controller
                 var bodyBuilder = new BodyBuilder();
 
                 // from
-                message.From.Add(new MailboxAddress("Contact Form", contact.Email));
+                message.From.Add(new MailboxAddress(contact.Name, contact.Email));
                 // to
                 message.To.Add(new MailboxAddress("Admin", _appSettings.ContactEmail));
 
